@@ -4,16 +4,26 @@ import cv2
 import numpy as np
 import pandas as pd
 import glob
+import shutil
+import os
 from PIL import Image
 from skimage.color import rgb2lab, deltaE_ciede2000
 from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import KMeans
-
 import warnings
 warnings.filterwarnings("ignore")
 
-#folder \Bilder is a copy of \qBilder (since they are downsized to 20x20 pixel)
-#folder \qBilder contains original images
+def copy_and_overwrite(from_path, to_path):
+    if os.path.exists(to_path):
+        shutil.rmtree(to_path)
+    shutil.copytree(from_path, to_path)
+
+#Creating Folders:
+#Images contains a copy of OriginalImages to downsize the images
+#clusterImages contains the results. Images have a prefix "CLUSTERx_" depending on their similarity cluster    
+path = os.getcwd()
+copy_and_overwrite(path+"\OriginalImages",path+"\Images")
+os.mkdir(path+"\clusterImages")
 
 # pixels in an image and their distances to eachother in deltaE_ciede2000
 class pixel_distances_within_image():
@@ -88,14 +98,6 @@ class visualise_dominant_colours():
                 color.astype("uint8").tolist(), -1)
             startX = endX
         return bar
-    def plot_and_save_dominant_colours(self,name):
-        bar = self.plot_colours()
-        plt.figure()
-        plt.axis("off")
-        plt.imshow(bar)
-        plt.savefig(name,dpi=400,bbox_inches='tight')
-        plt.show()
-    
     #transform each picture to a 1x100 image of its cluster colours
     def simplify_colours(self):
         bar = np.zeros((1, 100, 3), dtype = "uint8")
@@ -107,20 +109,7 @@ class visualise_dominant_colours():
             startX = endX
         return bar
 
-#import os
-
-# detect the current working directory and print it
-#path = os.chdir(os.getcwd()+'\Documents\GitHub\Playing_with_data')
-#try:
-#    os.mkdir(path+"\boxBilder")
-#    os.mkdir(path+"\clusterBilder")
-#except OSError:
-#    print ("Creation of directories failed")
-#else:
-#    print ("Successfully created the directories")
-
-
-image_names=glob.glob("Bilder/*.jpg")
+image_names=glob.glob("Images/*.jpg")
 
 #scale down images too 20x20 pixels
 for i in image_names:
@@ -134,7 +123,6 @@ for i in image_names:
     km=dominant_colours_via_KMedoids(dom)
     clstr=km.cluster(bsp.reshape())
     vis=visualise_dominant_colours(clstr[0], clstr[1])
-    #vis.plot_and_save_dominant_colours("box"+i)
     ic=vis.simplify_colours()
     images_colours.append(ic)
     
@@ -197,7 +185,7 @@ def show_cluster(cluster_label):
             print("Cluster "+str(cluster_label)+": "+sim.index[i])
             plt.figure()
             plt.axis('off')
-            plt.imshow(cv2.cvtColor(cv2.imread('q'+sim.index[i]), cv2.COLOR_BGR2RGB))
+            plt.imshow(cv2.cvtColor(cv2.imread('Original'+sim.index[i]), cv2.COLOR_BGR2RGB))
             plt.savefig('cluster'+sim.index[i].rsplit('\\')[0]+'\\CLUSTER'+str(cluster_label)+"_"+sim.index[i].rsplit('\\')[1],dpi=400,bbox_inches='tight')
             plt.show()
             
