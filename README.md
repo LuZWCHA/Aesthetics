@@ -11,8 +11,7 @@
   The upper image shows dominant colours found via KMedoids, the lower one via KMean. The clustered image is the last one from the previous plot, where the colours by KMeans were a bit off.<br />
   ![alt text](https://github.com/Kokostino/Aesthetics/blob/main/files/MedvsMean.PNG)<br />
   
-**Results**
-Clustering of 750 images into 200 clusters. Some examples:<br />
+**Results**: Clustering of 750 images into 200 clusters. Some examples:<br /><br />
 Cluster 4:<br />
 <img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage4.jpg" width="400" /><br /><br />
 Cluster 11:<br />
@@ -20,4 +19,6 @@ Cluster 11:<br />
 Cluster 34:<br />
 <img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage34.jpg" width="400" /><br /><br />
 Cluster 62:<br />
-<img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage62.jpg" width="400" />
+<img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage62.jpg" width="400" /><br /><br />
+Cluster 192:<br />
+<img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage192.jpg" width="400" />
