@@ -4,22 +4,27 @@ import cv2
 import numpy as np
 import pandas as pd
 import glob
+import shutil
 import os
 from PIL import Image
 from skimage.color import rgb2lab, deltaE_ciede2000
 from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import KMeans
+
 import warnings
 warnings.filterwarnings("ignore")
 
+def copy_and_overwrite(from_path, to_path):
+    if os.path.exists(to_path):
+        shutil.rmtree(to_path)
+    shutil.copytree(from_path, to_path)
 
 #Creating Folders:
 #Images contains a copy of OriginalImages to downsize the images
-#clusterImages contains the results. Images have a prefix "CLUSTERx_" depending on their similarity cluster    
 path = os.getcwd()
-
-os.mkdir(path+"\clusterFolder")
-
+copy_and_overwrite(path+"\OriginalImages",path+"\Images")
+#clusterImages contains the results. Images have a prefix "CLUSTERx_" depending on their similarity cluster    
+os.mkdir(path+"\clusterImages")
 
 # pixels in an image and their distances to eachother in deltaE_ciede2000
 class pixel_distances_within_image():
@@ -113,27 +118,44 @@ class visualise_dominant_colours():
             startX = endX
         return bar
 
+#import os
+
+# detect the current working directory and print it
+#path = os.chdir(os.getcwd()+'\Documents\GitHub\Playing_with_data')
+#try:
+#    os.mkdir(path+"\boxBilder")
+#    os.mkdir(path+"\clusterBilder")
+#except OSError:
+#    print ("Creation of directories failed")
+#else:
+#    print ("Successfully created the directories")
 
 
-image_names=glob.glob("Folder/*.jpg")
+image_names=glob.glob("Images/*.jpg")
 
 #scale down images too 20x20 pixels
 for i in image_names:
     pixel_distances_within_image(i).smallify_image(20)
  
 images_colours=[]    
-
+list_of_problematic_images=[]
+list_of_images=[]
 for i in image_names:
-    bsp=pixel_distances_within_image(i)
-    dom=bsp.distances_between_pixel_df()
-    km=dominant_colours_via_KMedoids(dom)
-    clstr=km.cluster(bsp.reshape())
-    vis=visualise_dominant_colours(clstr[0], clstr[1])
-    #vis.plot_and_save_dominant_colours("box"+i)
-    ic=vis.simplify_colours()
-    images_colours.append(ic)
+    try:
+        bsp=pixel_distances_within_image(i)
+        dom=bsp.distances_between_pixel_df()
+        km=dominant_colours_via_KMedoids(dom)
+        clstr=km.cluster(bsp.reshape())
+        vis=visualise_dominant_colours(clstr[0], clstr[1])
+        #vis.plot_and_save_dominant_colours("box"+i)
+        ic=vis.simplify_colours()
+        images_colours.append(ic)
+        list_of_images.append(i)
+    except:
+        list_of_problematic_images.append(i)
     
-    
+image_names=list_of_images   
+print("The following images caused troubles and are hence excluded: ", list_of_problematic_images) 
 #transform to lab
 lab_images=[]
 for image in images_colours:
@@ -172,9 +194,19 @@ for i in range(0,len(lab_images)):
     data.append(l)
     
 sim=pd.DataFrame(data=data,index=image_names, columns=image_names)
-kmeans = KMeans(n_clusters=20, random_state=0).fit(sim)
+kmeans = KMeans(n_clusters=200, random_state=0).fit(sim)
 sim.insert(0, 'Cluster Labels', kmeans.labels_)
 
+def show_cluster_with_box(cluster_label):
+    for i in range(0,len(sim)):
+        if sim["Cluster Labels"][i]==cluster_label:
+            print("Cluster "+str(cluster_label)+": "+sim.index[i])
+            f, axarr = plt.subplots(1,2)
+            axarr[0].imshow(cv2.cvtColor(cv2.imread('Original'+sim.index[i]), cv2.COLOR_BGR2RGB))
+            axarr[0].axis('off')
+            #plt.savefig('cluster'+sim.index[i].rsplit('\\')[0]+'\\'+str(i)+sim.index[i].rsplit('\\')[1],dpi=400,bbox_inches='tight')
+            axarr[1].imshow(cv2.cvtColor(cv2.imread("box"+sim.index[i]), cv2.COLOR_BGR2RGB))
+            axarr[1].axis('off')
 
 def show_cluster(cluster_label):
     for i in range(0,len(sim)):
