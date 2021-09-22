@@ -10,5 +10,14 @@
   In **Aesthetics.ipynb**, KMeans and RGB coordinates (having a euclidean metric) is used for finding the dominant colours in an image. Ideally one'd use Lab space and ΔE*-metric. In **Aesthetics_KMedoids.ipynb** we use KMediods for clustering which also works for non-euclidean distances. KMedoids is similar to KMeans but instead of calculating the mean to set the centroid position, the most central data point itsself is set as centroid. As input, the distances of pixels in CIEDE2000 are sufficient.<br />
   The upper image shows dominant colours found via KMedoids, the lower one via KMean. The clustered image is the last one from the previous plot, where the colours by KMeans were a bit off.<br />
   ![alt text](https://github.com/Kokostino/Aesthetics/blob/main/files/MedvsMean.PNG)<br />
- 
-
+  
+**Results**
+Clustering of 750 images into 200 clusters. Some examples:<br />
+Cluster 4:<br />
+<img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage4.jpg" width="400" /><br /><br />
+Cluster 11:<br />
+<img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage11.jpg" width="400" /><br /><br />
+Cluster 34:<br />
+<img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage34.jpg" width="400" /><br /><br />
+Cluster 62:<br />
+<img src="https://github.com/Kokostino/Aesthetics/blob/main/files/BeFunky-collage62.jpg" width="400" />
