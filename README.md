@@ -1,7 +1,7 @@
 # Aesthetics
 
  **Aesthetics.py**: <br />
- Python script which takes the jpg-images in a folder "OriginalImages", downsizes those images for performance reasons in a folder "Images" and clusters them according to their similarity in colour into a new folder "clusterBilder".<br />
+ Python script which takes the jpg-images in a folder "OriginalImages", downsizes those images for performance reasons in a folder "Images" and clusters them according to their similarity in colour into a new folder "clusterImages".<br />
 
   **Goal**: Order images by similarity of their dominant colours for aesthetics.<br />
   **Method**: Finding the dominant colours in images using a clustering algorithm, calculating distances in Cielab colour space using the metric Cielab ΔE* CIEDE2000 to account for distances as perceived by the human eye. Second KMeans clustering to find clusters of images which look aesthetically together colourwise.<br />
