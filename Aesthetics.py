@@ -118,18 +118,6 @@ class visualise_dominant_colours():
             startX = endX
         return bar
 
-#import os
-
-# detect the current working directory and print it
-#path = os.chdir(os.getcwd()+'\Documents\GitHub\Playing_with_data')
-#try:
-#    os.mkdir(path+"\boxBilder")
-#    os.mkdir(path+"\clusterBilder")
-#except OSError:
-#    print ("Creation of directories failed")
-#else:
-#    print ("Successfully created the directories")
-
 
 image_names=glob.glob("Images/*.jpg")
 
@@ -215,7 +203,7 @@ def show_cluster(cluster_label):
             plt.figure()
             plt.axis('off')
             plt.imshow(cv2.cvtColor(cv2.imread('Original'+sim.index[i]), cv2.COLOR_BGR2RGB))
-            plt.savefig('cluster'+sim.index[i].rsplit('\\')[0]+'\\CLUSTER'+str(cluster_label)+"_"+sim.index[i].rsplit('\\')[1],dpi=400,bbox_inches='tight')
+            plt.savefig('cluster'+sim.index[i].rsplit('\\')[0]+'\\CLUSTER'+str(cluster_label)+"_"+sim.index[i].rsplit('\\')[1],dpi=400,bbox_inches=None)
             plt.show()
             
 for i in np.unique(kmeans.labels_).tolist():
